@@ -232,6 +232,10 @@ def from_scanpy(
     count_data = groups.unstack(level=cell_type_identifier)
     count_data = count_data.fillna(0)
 
+    # make sure the order of rows in count_data matches the order of rows in
+    # covariate_df
+    covariate_df = covariate_df.loc[count_data.index]
+
     return ad.AnnData(X=count_data.values,
                       var=count_data.sum(axis=0).rename("n_cells").to_frame(),
                       obs=covariate_df)
